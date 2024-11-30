@@ -1,0 +1,33 @@
+services:
+  lb:
+    build: .
+    container_name: load_balancer
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 5s
+      retries: 3
+    volumes:
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./GeoLite2-Country.mmdb:/etc/nginx/geoip/GeoLite2-Country.mmdb:ro
+
+  uk_server:
+    image: httpd:latest
+    container_name: uk_server
+
+  us_server1:
+    image: httpd:latest
+    container_name: us_server1
+
+  us_server2:
+    image: httpd:latest
+    container_name: us_server2
+
+  rest_server:
+    image: httpd:latest
+    container_name: rest_server
+
+  backup_server:
+    image: httpd:latest
+    container_name: backup_server
